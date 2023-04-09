@@ -1,32 +1,122 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+class QuoteBox extends StatefulWidget {
+  final List<String> quotes;
+
+  QuoteBox({required this.quotes});
+
+  @override
+  _QuoteBoxState createState() => _QuoteBoxState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _QuoteBoxState extends State<QuoteBox> {
+  int _currentIndex = 0;
 
-  // This widget is the root of your application.
+  void _nextQuote() {
+    setState(() {
+      _currentIndex = (_currentIndex + 1) % widget.quotes.length;
+    });
+  }
+
+  void _previousQuote() {
+    setState(() {
+      _currentIndex = (_currentIndex - 1) % widget.quotes.length;
+      if (_currentIndex < 0) {
+        _currentIndex = widget.quotes.length - 1;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Quotes of the day',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Scaffold(
+            //appBar: AppBar(title: Text("Quotes of the day")),
+            body: Center(
+          child: Container(
+            width: 500,
+            height: 150,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [Colors.blue, Colors.purple])),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.quotes[_currentIndex],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _previousQuote,
+                        child: Text('Previous'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.red), // Set button color to red
+                          textStyle: MaterialStateProperty.all<TextStyle>(
+                            TextStyle(
+                                fontSize: 20,
+                                color: Colors.white), // Set font color to white
+                          ),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: _nextQuote,
+                        child: Text('Next'),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green), // Set button color to green
+                          textStyle: MaterialStateProperty.all<TextStyle>(
+                            TextStyle(
+                                fontSize: 20,
+                                color: Colors.white), // Set font color to white
+                          ),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]),
+              ],
+            ),
+          ),
+        )));
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: QuoteBox(
+      quotes: [
+        "Learn as if you will live forever, live like you will die tomorrow.",
+        "The only way to do great work is to love what you do.",
+        "Life goes on.",
+        "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+        "Believe you can and you're halfway there.",
+        "Opportunities don't happen, you create them.",
+        "Love your family, work super hard, live your passion.",
+        "It is never too late to be what you might have been.",
+        "Success is getting what you want, happiness is wanting what you get.",
+        "Don't let yesterday take up too much of today."
+      ],
+    ),
+  ));
 }
 
 class MyHomePage extends StatefulWidget {
